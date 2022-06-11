@@ -1,12 +1,12 @@
 package ru.bgpu.client;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import ru.bgpu.client.dto.FileInfoDto;
 import ru.bgpu.client.dto.ServerInfoDto;
 
 import java.io.IOException;
@@ -18,14 +18,17 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     private DetectiveServers detectiveServers;
+    private RemoteServer fileChoose;
     @FXML public ListView<RemoteServer> listServers;
-    @FXML public ListView<String> listFiles;
+    @FXML public ListView<FileInfoDto> listFiles;
+    @FXML public Label sizeFile;
 
 
     boolean run = true;
 
-    public void save(ActionEvent actionEvent) {
-//        listServers.getItems().add("hello");
+    public void save(ActionEvent actionEvent) throws IOException {
+        fileChoose = listServers.getSelectionModel().getSelectedItem();
+        fileChoose.sendFile(listFiles.getSelectionModel().getSelectedItem().getName());
     }
 
     @Override
@@ -47,7 +50,11 @@ public class Controller implements Initializable {
                     });
                 }
         );
-        listFiles.getSelectionModel().getSelectedItems();
+        listFiles.getSelectionModel().selectedItemProperty().addListener(
+                (observableValue, old, item) -> {
+                        sizeFile.setText("Size: " + item.getSize() + " Kb");
+                }
+        );
     }
 
     public void updateServersList(ActionEvent actionEvent) {
@@ -62,7 +69,6 @@ public class Controller implements Initializable {
         Platform.runLater(()->{
             try {
                 listServers.getItems().add(new RemoteServer(dto));
-                System.out.println("!");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

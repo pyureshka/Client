@@ -12,6 +12,7 @@ public class DetectiveServers{
     private Boolean run = true;
     private InetAddress ipGroup;
     private DatagramSocket mcSocket;
+
     public DetectiveServers(Controller controller) throws SocketException, UnknownHostException {
         this.controller = controller;
         mcSocket = new DatagramSocket();
@@ -20,19 +21,19 @@ public class DetectiveServers{
     }
 
     public void sendMsgToServers() throws IOException {
-        InetAddress ipGroup = InetAddress.getByName("228.5.6.7");
+        ipGroup = InetAddress.getByName("228.5.6.7");
+
         String msg = "client connect";
-        DatagramPacket testConnect = new DatagramPacket(
+        DatagramPacket packet = new DatagramPacket(
                 msg.getBytes(),
                 msg.length(),
                 ipGroup,
                 2121
         );
-        mcSocket.send(testConnect);
+        mcSocket.send(packet);
     }
 
     public void serversInfo()  {
-
         DatagramPacket packFromServer = new DatagramPacket(
                 new byte[1024],
                 1024,
@@ -55,15 +56,13 @@ public class DetectiveServers{
                 throw new RuntimeException(e);
             }
         }
+        mcSocket.close();
     }
 
     public Boolean getRun() {
         return run;
     }
-
     public void setRun(Boolean run) {
         this.run = run;
     }
-
-
 }

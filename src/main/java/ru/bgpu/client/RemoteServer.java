@@ -2,45 +2,58 @@ package ru.bgpu.client;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import ru.bgpu.client.dto.FileInfoDto;
 import ru.bgpu.client.dto.ServerInfoDto;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
 
-public class RemoteServer{
-
+public class RemoteServer {
     private int port;
     private String host;
     private String name;
-
     private Socket clientSocket = null;
+    private Gson gson;
+    private InputStream in;
+    private BufferedWriter bufOut;
 
-    String[] fileNames;
-    public RemoteServer() throws IOException {}
-
-    public RemoteServer (ServerInfoDto dto) throws IOException {
+    public RemoteServer(ServerInfoDto dto) throws IOException {
         this.name = dto.getName();
         this.host = dto.getHost();
         this.port = dto.getPort();
-        this.clientSocket = new Socket(this.host, this.port);
+
     }
 
-    public List<String> fileNames () throws IOException {
-        InputStream in = clientSocket.getInputStream();
+    public List<FileInfoDto> fileNames() throws IOException {
+        this.clientSocket = new Socket(this.host, this.port);
+        bufOut = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), StandardCharsets.UTF_8));
+        String command = "FilesList\n";
+        bufOut.write(command);
+        bufOut.flush();
+
+        in = clientSocket.getInputStream();
         int fileSize = in.read();
         byte[] list = new byte[fileSize];
         in.read(list,0,fileSize);
         String filesListJson = new String(list, "utf-8").trim();
-
-        Gson gson = new Gson();
-        List<String> filesList= gson.fromJson(filesListJson,  new TypeToken<List<String>>(){}.getType());
+        gson = new Gson();
+        List<FileInfoDto> filesList = gson.fromJson(filesListJson, new TypeToken<List<FileInfoDto>>(){}.getType());
+        in.close();
+        bufOut.close();
         return filesList;
     }
 
-    public void sendFileName (String fileName) {
-
+    public void sendFile(String fileName) throws IOException {
+        this.clientSocket = new Socket(this.host, this.port);
+        bufOut = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), StandardCharsets.UTF_8));
+        String command = "SendFile\n";
+        bufOut.write(command);
+        String name = fileName+"\n";
+        bufOut.write(name);
+        bufOut.flush();
     }
 
     @Override
