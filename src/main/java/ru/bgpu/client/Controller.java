@@ -6,9 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import ru.bgpu.client.dto.FileInfoDto;
 import ru.bgpu.client.dto.ServerInfoDto;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.URL;
@@ -19,6 +22,7 @@ public class Controller implements Initializable {
 
     private DetectiveServers detectiveServers;
     private RemoteServer fileChoose;
+    private FileChooser fileChooser;
     @FXML public ListView<RemoteServer> listServers;
     @FXML public ListView<FileInfoDto> listFiles;
     @FXML public Label sizeFile;
