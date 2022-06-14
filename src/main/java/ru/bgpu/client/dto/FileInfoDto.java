@@ -4,11 +4,11 @@ import java.io.File;
 
 public class FileInfoDto {
     private String name;
-    private double size;
+    private long size;
 
     public FileInfoDto(File file) {
         this.name = file.getName();
-        this.size = file.length()/(1024*1024);
+        this.size = file.length();
     }
 
     public String getName() {

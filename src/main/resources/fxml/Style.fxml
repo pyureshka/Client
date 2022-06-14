@@ -26,8 +26,8 @@
             <ListView fx:id="listFiles" prefHeight="298.0" prefWidth="352.0" />
          </children>
       </AnchorPane>
-      <Button layoutX="459.0" layoutY="350.0" mnemonicParsing="false" onAction="#updateServersList" text="update" />
-      <Button layoutX="533.0" layoutY="350.0" mnemonicParsing="false" onAction="#save" text="save" />
-      <Label fx:id="sizeFile" layoutX="218.0" layoutY="354.0" prefHeight="17.0" prefWidth="86.0" text="Size: " />
+      <Button fx:id="update" layoutX="459.0" layoutY="350.0" mnemonicParsing="false" onAction="#updateServersList" text="update" />
+      <Button fx:id="save" layoutX="533.0" layoutY="350.0" mnemonicParsing="false" onAction="#save" text="save" />
+      <Label fx:id="info" layoutX="218.0" layoutY="354.0" prefHeight="17.0" prefWidth="225.0" text="--" />
    </children>
 </AnchorPane>
